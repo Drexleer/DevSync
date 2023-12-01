@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  types: {
+    type: String,
+    default: 'user',
+  },
   tokenRecovery: {
     type: String,
   },
@@ -49,16 +53,15 @@ userSchema.pre('save', async function (next) {
     return next();
   }
 
-  bcrypt.genSalt(10, function (err, salt) {
-    if (err) return next(err);
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(user.password, salt);
 
-    bcrypt.hash(user.password, salt, (err, hash) => {
-      if (err) return next(err);
-
-      user.password = hash;
-      next();
-    });
-  });
+    user.password = hash;
+    next();
+  } catch (error) {
+    return next(error);
+  }
 });
 
 module.exports = mongoose.model('User', userSchema);
