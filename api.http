@@ -1,0 +1,9 @@
+### Contacto con ADMIN
+POST http://localhost:3001/contact/message/
+Content-Type: application/json
+
+{
+  "name": "Martin Lamacchia",
+  "email": "martinjiro22@gmail.com",
+  "message": "Hola Administrador tengo un problema con la creacion del proyecto"
+}
