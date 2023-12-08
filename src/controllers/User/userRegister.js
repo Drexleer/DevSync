@@ -1,5 +1,6 @@
-const User = require('../../models/User');
-const uploadImage = require('../../utils/Cloudinary');
+require("dotenv").config();
+const User = require("../../models/User");
+const uploadImage = require("../../utils/Cloudinary");
 
 const userRegister = async (req, res) => {
   try {
@@ -7,11 +8,11 @@ const userRegister = async (req, res) => {
       req.body;
 
     const result = await uploadImage(req.files.image.tempFilePath);
-    console.log(result.secure_url, 'aqui la imagen');
+    console.log(result.secure_url, "aqui la imagen");
 
     const userFound = await User.findOne({ email });
     if (userFound) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     const newUser = new User({
@@ -25,9 +26,9 @@ const userRegister = async (req, res) => {
     });
 
     await newUser.save();
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).json({ message: "User created successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating user' });
+    res.status(500).json({ message: "Error creating user" });
     console.log(error);
   }
 };

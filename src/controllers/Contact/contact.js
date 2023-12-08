@@ -7,18 +7,18 @@ const newContact = async (req, res) => {
 
   try {
     // Guardar el mensaje en la base de datos
-    // const newMessage = await Messages.create({
-    //   message,
-    //   name,
-    //   email,
-    // });
+    const newMessage = await Messages.create({
+      message,
+      name,
+      email,
+    });
 
     // Configura el contenido del correo electrónico para el administrador
     const clientEmailSend = {
-      from: name,
+      from: newMessage.name,
       to: process.env.EMAILCLIENT,
       subject: `Nuevo mensaje del formulario de contacto`,
-      text: `Nombre: ${name}\nEmail: ${email}\nMensaje: ${message}`,
+      text: `Nombre: ${newMessage.name}\nEmail: ${newMessage.email}\nMensaje: ${newMessage.message}`,
     };
 
     // console.log(clientEmailSend);
@@ -31,10 +31,10 @@ const newContact = async (req, res) => {
       }
     });
 
-    const adminEmailSend = {
+    const adminContactEmailSend = {
       from: process.env.EMAILCLIENT,
-      to: email,
-      subject: `Gracias por contartarme ${name}`,
+      to: newMessage.email,
+      subject: `Gracias por contartarme ${newMessage.name}`,
       html: `<!DOCTYPE html>
       <html lang="en">
       <head>
@@ -116,7 +116,7 @@ const newContact = async (req, res) => {
             <img src="cid:LogoHenry" alt="Imagen logo" />
           </header>
           <main>
-            <p>Estimado/a ${name},</p>
+            <p>Estimado/a ${newMessage.name},</p>
             <p>
               Gracias por ponerte en contacto. Hemos recibido tu mensaje y queremos
               agradecerte sinceramente por tomarte el tiempo de compartir tus
@@ -164,7 +164,7 @@ const newContact = async (req, res) => {
 
     // console.log(adminEmailSend);
 
-    await transporter.sendMail(adminEmailSend, (error, info) => {
+    await transporter.sendMail(adminContactEmailSend, (error, info) => {
       if (error) {
         console.log("Error al enviar el correo electrónico:", error);
       } else {
@@ -177,6 +177,7 @@ const newContact = async (req, res) => {
       success: true,
       message:
         "¡Correo electrónico enviado con éxito! Por favor, espera en tu bandeja de entrada la respuesta del administrador. ¡Gracias por tu mensaje!",
+      newMessage,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
