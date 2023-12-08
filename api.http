@@ -43,3 +43,12 @@ GET http://localhost:3001/proyect
 
 ### Obtener un proyecto por Id
 GET http://localhost:3001/proyect/65737acdbfed0f4cb263cc79
+
+### Crear un Proyecto
+POST http://localhost:3001/proyect/register
+Content-Type: application/json
+
+{
+  "proyectId": "65737acdbfed0f4cb263cc79",
+  "participantsId": "656a54d2df516ba1622d5c41"
+}
