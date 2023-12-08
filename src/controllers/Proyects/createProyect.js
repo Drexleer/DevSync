@@ -14,8 +14,16 @@ const createdProyect = async (req, res) => {
   try {
     const result = await uploadImage(req.files.image.tempFilePath);
 
-    const proyectFound = await Proyect.findOne({ name });
+    // Valida que cada usuario pueda crear un proyecto solamente
+    const existingProyect = await Proyect.findOne({ createdBy });
+    if (existingProyect) {
+      return res.status(400).json({
+        message: "Ya tienes un proyecto creado. No puedes crear más de uno.",
+      });
+    }
 
+    // Valida que los proyectos no tengan el mismo nombre
+    const proyectFound = await Proyect.findOne({ name });
     if (proyectFound) {
       return res
         .status(400)
