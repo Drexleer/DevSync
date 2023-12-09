@@ -21,8 +21,6 @@ const newContact = async (req, res) => {
       text: `Nombre: ${newMessage.name}\nEmail: ${newMessage.email}\nMensaje: ${newMessage.message}`,
     };
 
-    // console.log(clientEmailSend);
-
     await transporter.sendMail(clientEmailSend, (error, info) => {
       if (error) {
         console.log("Error al enviar el correo electrónico:", error);
@@ -161,8 +159,6 @@ const newContact = async (req, res) => {
         },
       ],
     };
-
-    // console.log(adminEmailSend);
 
     await transporter.sendMail(adminContactEmailSend, (error, info) => {
       if (error) {

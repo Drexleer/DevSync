@@ -9,6 +9,8 @@ const proyectById = async (req, res) => {
       .populate("participants")
       .exec();
 
+    console.log(proyectFound.createdBy.email);
+
     if (!proyectFound) {
       return res.status(404).json({ message: "Proyecto no encontrado" });
     }
