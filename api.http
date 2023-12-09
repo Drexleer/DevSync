@@ -7,3 +7,48 @@ Content-Type: application/json
   "email": "martinjiro22@gmail.com",
   "message": "Hola Administrador tengo un problema con la creacion del proyecto"
 }
+
+### Obtener todos los Usuarios
+GET http://localhost:3001/user
+
+### Crear un Usuario
+POST http://localhost:3001/user/register
+Content-Type: application/json
+
+{
+  "name": "Martin",
+  "lastName": "Lamacchia",
+  "userName": "Zurdo666",
+  "technologies": ["JavaScript", "HTML", "CSS", "NodeJS", "React"],
+  "email": "martinjiro22@gmail.com",
+  "password": "Pass123",
+}
+
+### Crear un Proyecto
+POST http://localhost:3001/proyect/create
+Content-Type: application/json
+
+{
+  "name": "Ecomerce Ropa",
+  "description": "Tenermos que hacer un Ecomerce de ropa donde tenga un stock",
+  "technologies": ["JavaScript", "HTML", "CSS", "NodeJS", "React"],
+  "linkProyectBack": "",
+  "linkProyectFront": "",
+  "image": "",
+  "createdBy": "65699972af200167f47502aa" 
+}
+
+### Obtener todos los Proyectos
+GET http://localhost:3001/proyect
+
+### Obtener un proyecto por Id
+GET http://localhost:3001/proyect/65737acdbfed0f4cb263cc79
+
+### Crear un Proyecto
+POST http://localhost:3001/proyect/register
+Content-Type: application/json
+
+{
+  "proyectId": "65737acdbfed0f4cb263cc79",
+  "participantsId": "656a5956109780b90cd3cabc"
+}
