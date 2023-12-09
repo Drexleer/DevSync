@@ -12,7 +12,7 @@ const createdProyect = async (req, res) => {
   } = req.body;
 
   try {
-    const result = await uploadImage(req.files.image.tempFilePath);
+    // const result = await uploadImage(req.files.image.tempFilePath);
 
     // Valida que cada usuario pueda crear un proyecto solamente
     const existingProyect = await Proyect.findOne({ createdBy });
@@ -36,7 +36,7 @@ const createdProyect = async (req, res) => {
       technologies,
       linkProyectBack,
       linkProyectFront,
-      image: result.secure_url,
+      // image: result.secure_url,
       createdBy,
     });
 
