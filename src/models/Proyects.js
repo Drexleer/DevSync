@@ -23,6 +23,9 @@ const proyectSchema = new mongoose.Schema({
   linkProyectBack: {
     type: String,
   },
+  linkProyectManagement: {
+    type: String,
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
