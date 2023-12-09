@@ -10,14 +10,12 @@ const deleteProyect = async (req, res) => {
       .populate("participants")
       .exec();
 
-    console.log(createByFound);
-
     const deleteProyect = await Proyect.findByIdAndDelete(id);
 
     const adminEmailSend = {
       from: process.env.EMAILCLIENT,
       to: createByFound.createdBy.email,
-      subject: `Gracias por contartarme ${createByFound.createdBy.name} ${createByFound.createdBy.lastName}`,
+      subject: `Proyecto ${createByFound.name} eliminado con exito`,
       html: `<!DOCTYPE html>
       <html lang="en">
       <head>
@@ -101,7 +99,7 @@ const deleteProyect = async (req, res) => {
           <main>
             <p>Estimado/a ${createByFound.createdBy.userName},</p>
             <p>
-              Le informamos que ha creado exitosamente el proyecto: ${createByFound.name}
+              Le informamos que ha borrado exitosamente el proyecto: ${createByFound.name}
             </p>
             <p>
               Cualquier cosa no dude en contactarnos

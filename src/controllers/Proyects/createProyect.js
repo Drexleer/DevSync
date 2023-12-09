@@ -48,7 +48,7 @@ const createdProyect = async (req, res) => {
     const adminEmailSend = {
       from: process.env.EMAILCLIENT,
       to: userCreator.email,
-      subject: `Gracias por contartarme ${userCreator.name} ${userCreator.lastName}`,
+      subject: `Proyecto ${newProyect.name} creado con exito`,
       html: `<!DOCTYPE html>
       <html lang="en">
       <head>
@@ -132,7 +132,7 @@ const createdProyect = async (req, res) => {
           <main>
             <p>Estimado/a ${userCreator.userName},</p>
             <p>
-              Le informamos que ha borrado exitosamente el proyecto: ${newProyect.name}
+              Le informamos que ha creado exitosamente el proyecto: ${newProyect.name}
             </p>
             <p>
               Cualquier cosa no dude en contactarnos
