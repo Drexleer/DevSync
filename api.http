@@ -29,7 +29,7 @@ POST http://localhost:3001/proyect/create
 Content-Type: application/json
 
 {
-  "name": "Ecomerce Ropa",
+  "name": "Ecomerce Indumentaria",
   "description": "Tenermos que hacer un Ecomerce de ropa donde tenga un stock",
   "technologies": ["JavaScript", "HTML", "CSS", "NodeJS", "React"],
   "linkProyectBack": "",
@@ -42,9 +42,9 @@ Content-Type: application/json
 GET http://localhost:3001/proyect
 
 ### Obtener un proyecto por Id
-GET http://localhost:3001/proyect/65737acdbfed0f4cb263cc79
+GET http://localhost:3001/proyect/6573addf59580384f620cf02
 
-### Crear un Proyecto
+### Registrarse a un Proyecto
 POST http://localhost:3001/proyect/register
 Content-Type: application/json
 
@@ -52,3 +52,15 @@ Content-Type: application/json
   "proyectId": "65737acdbfed0f4cb263cc79",
   "participantsId": "656a5956109780b90cd3cabc"
 }
+
+### Borrar usuario de un Proyecto
+POST http://localhost:3001/proyect/deleteUser
+Content-Type: application/json
+
+{
+  "proyectId": "65737acdbfed0f4cb263cc79",
+  "participantsId": "656a54d2df516ba1622d5c41"
+}
+
+### Borrar usuario de un Proyecto
+DELETE http://localhost:3001/proyect/deleteProyect/6573addf59580384f620cf02
