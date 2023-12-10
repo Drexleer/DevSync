@@ -1,54 +1,21 @@
-require("dotenv").config();
-const Proyect = require("../../models/Proyects");
-const User = require("../../models/User");
-const uploadImage = require("../../utils/Cloudinary");
-const transporter = require("../../utils/nodemailer");
+const Project = require('../../models/Projects');
+const transporter = require('../../utils/nodemailer');
 
-const createdProyect = async (req, res) => {
-  const {
-    name,
-    description,
-    technologies,
-    linkProyectFront,
-    linkProyectBack,
-    createdBy,
-  } = req.body;
+const deleteProject = async (req, res) => {
+  const { id } = req.params;
 
   try {
-    const userCreator = await User.findById(createdBy);
+    const createByFound = await Project.findById(id)
+      .populate('createdBy')
+      .populate('participants')
+      .exec();
 
-    const result = await uploadImage(req.files.image.tempFilePath);
-
-    // Valida que cada usuario pueda crear un proyecto solamente
-    const existingProyect = await Proyect.findOne({ createdBy });
-    if (existingProyect) {
-      return res.status(400).json({
-        message: "Ya tienes un proyecto creado. No puedes crear más de uno.",
-      });
-    }
-
-    // Valida que los proyectos no tengan el mismo nombre
-    const proyectFound = await Proyect.findOne({ name });
-    if (proyectFound) {
-      return res
-        .status(400)
-        .json({ message: "El nombre del proyecto ya esta siendo utilizado" });
-    }
-
-    const newProyect = await Proyect.create({
-      name,
-      description,
-      technologies,
-      linkProyectBack,
-      linkProyectFront,
-      image: result.secure_url,
-      createdBy,
-    });
+    const deleteProject = await Project.findByIdAndDelete(id);
 
     const adminEmailSend = {
       from: process.env.EMAILCLIENT,
-      to: userCreator.email,
-      subject: `Proyecto ${newProyect.name} creado con exito`,
+      to: createByFound.createdBy.email,
+      subject: `Proyecto ${createByFound.name} eliminado con exito`,
       html: `<!DOCTYPE html>
       <html lang="en">
       <head>
@@ -130,9 +97,9 @@ const createdProyect = async (req, res) => {
             <img src="cid:LogoHenry" alt="Imagen logo" />
           </header>
           <main>
-            <p>Estimado/a ${userCreator.userName},</p>
+            <p>Estimado/a ${createByFound.createdBy.userName},</p>
             <p>
-              Le informamos que ha creado exitosamente el proyecto: ${newProyect.name}
+              Le informamos que ha borrado exitosamente el proyecto: ${createByFound.name}
             </p>
             <p>
               Cualquier cosa no dude en contactarnos
@@ -150,40 +117,40 @@ const createdProyect = async (req, res) => {
       </html>`,
       attachments: [
         {
-          filename: "LogoHenry.png",
-          path: "./src/controllers/Proyects/image/LogoHenry.png",
-          cid: "LogoHenry",
+          filename: 'LogoHenry.png',
+          path: './src/controllers/Projects/image/LogoHenry.png',
+          cid: 'LogoHenry',
         },
         {
-          filename: "Facebook.png",
-          path: "./src/controllers/Proyects/image/Facebook.png",
-          cid: "Facebook",
+          filename: 'Facebook.png',
+          path: './src/controllers/Projects/image/Facebook.png',
+          cid: 'Facebook',
         },
         {
-          filename: "Instagram.png",
-          path: "./src/controllers/Proyects/image/Instagram.png",
-          cid: "Instagram",
+          filename: 'Instagram.png',
+          path: './src/controllers/Projects/image/Instagram.png',
+          cid: 'Instagram',
         },
         {
-          filename: "Linkedin.png",
-          path: "./src/controllers/Proyects/image/Linkedin.png",
-          cid: "Linkedin",
+          filename: 'Linkedin.png',
+          path: './src/controllers/Projects/image/Linkedin.png',
+          cid: 'Linkedin',
         },
       ],
     };
 
     await transporter.sendMail(adminEmailSend, (error, info) => {
       if (error) {
-        console.log("Error al enviar el correo electrónico:", error);
+        console.log('Error al enviar el correo electrónico:', error);
       } else {
-        console.log("Correo electrónico enviado:", info.response);
+        console.log('Correo electrónico enviado:', info.response);
       }
     });
 
-    res.status(201).json({ message: "Proyecto creado con exito", newProyect });
+    res.status(200).json({ message: 'El proyecto ha sido eliminado' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = createdProyect;
+module.exports = deleteProject;
