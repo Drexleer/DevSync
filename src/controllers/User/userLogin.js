@@ -4,8 +4,14 @@ const bcrypt = require('bcrypt');
 const userLogin = async (req, res) => {
   const { email, password, types } = req.body;
 
+  let typesUser = 'user';
+
+  if (types !== undefined) {
+    typesUser = types;
+  }
+
   try {
-    const user = await User.findOne({ email: email, types: types });
+    const user = await User.findOne({ email: email, types: typesUser });
 
     if (!user) return res.status(400).json({ message: 'El usuario no existe' });
 

@@ -1,18 +1,18 @@
-const Proyect = require("../../models/Proyects");
-const User = require("../../models/User");
+const Project = require('../../models/Projects');
+const User = require('../../models/User');
 
-const deleteUserProyect = async (req, res) => {
-  const { proyectId, participantsId } = req.body;
+const deleteUserProject = async (req, res) => {
+  const { projectId, participantsId } = req.body;
 
   try {
-    const createByFound = await Proyect.findById(proyectId)
-      .populate("createdBy")
-      .populate("participants")
+    const createByFound = await Project.findById(projectId)
+      .populate('createdBy')
+      .populate('participants')
       .exec();
 
     if (!createByFound) {
       return res.status(404).json({
-        message: "No se encontro el proyecto",
+        message: 'No se encontro el proyecto',
       });
     }
 
@@ -21,7 +21,7 @@ const deleteUserProyect = async (req, res) => {
     if (createByObjectId === participantsId) {
       return res.status(200).json({
         message:
-          "El usuario es el creador del Proyecto no puede ser borrado del proyecto",
+          'El usuario es el creador del Proyecto no puede ser borrado del proyecto',
       });
     }
 
@@ -30,11 +30,11 @@ const deleteUserProyect = async (req, res) => {
     );
 
     if (participantsObjectId.length === createByFound.participants.length) {
-      return res.status(404).json({ message: "El usuario no se encontro" });
+      return res.status(404).json({ message: 'El usuario no se encontro' });
     }
 
-    const deleteUser = await Proyect.findByIdAndUpdate(
-      proyectId,
+    const deleteUser = await Project.findByIdAndUpdate(
+      projectId,
       { participants: participantsObjectId },
       { new: true }
     );
@@ -148,40 +148,40 @@ const deleteUserProyect = async (req, res) => {
       </html>`,
       attachments: [
         {
-          filename: "LogoHenry.png",
-          path: "./src/controllers/Proyects/image/LogoHenry.png",
-          cid: "LogoHenry",
+          filename: 'LogoHenry.png',
+          path: './src/controllers/Projects/image/LogoHenry.png',
+          cid: 'LogoHenry',
         },
         {
-          filename: "Facebook.png",
-          path: "./src/controllers/Proyects/image/Facebook.png",
-          cid: "Facebook",
+          filename: 'Facebook.png',
+          path: './src/controllers/Projects/image/Facebook.png',
+          cid: 'Facebook',
         },
         {
-          filename: "Instagram.png",
-          path: "./src/controllers/Proyects/image/Instagram.png",
-          cid: "Instagram",
+          filename: 'Instagram.png',
+          path: './src/controllers/Projects/image/Instagram.png',
+          cid: 'Instagram',
         },
         {
-          filename: "Linkedin.png",
-          path: "./src/controllers/Proyects/image/Linkedin.png",
-          cid: "Linkedin",
+          filename: 'Linkedin.png',
+          path: './src/controllers/Projects/image/Linkedin.png',
+          cid: 'Linkedin',
         },
       ],
     };
 
     await transporter.sendMail(adminEmailSendToCreateBy, (error, info) => {
       if (error) {
-        console.log("Error al enviar el correo electrónico:", error);
+        console.log('Error al enviar el correo electrónico:', error);
       } else {
-        console.log("Correo electrónico enviado:", info.response);
+        console.log('Correo electrónico enviado:', info.response);
       }
     });
 
     const adminEmailSendToParticipant = {
       from: process.env.EMAILCLIENT,
       to: participantDelete.email,
-      subject: `${participantDelete.name} ${participantDelete.lastName} ya no es parte del proyecto`,
+      subject: `${participantDelete.name} ${participantDelete.lastName} ya no es parte del Projecto`,
       html: `<!DOCTYPE html>
       <html lang="en">
       <head>
@@ -283,42 +283,42 @@ const deleteUserProyect = async (req, res) => {
       </html>`,
       attachments: [
         {
-          filename: "LogoHenry.png",
-          path: "./src/controllers/Proyects/image/LogoHenry.png",
-          cid: "LogoHenry",
+          filename: 'LogoHenry.png',
+          path: './src/controllers/Projects/image/LogoHenry.png',
+          cid: 'LogoHenry',
         },
         {
-          filename: "Facebook.png",
-          path: "./src/controllers/Proyects/image/Facebook.png",
-          cid: "Facebook",
+          filename: 'Facebook.png',
+          path: './src/controllers/Projects/image/Facebook.png',
+          cid: 'Facebook',
         },
         {
-          filename: "Instagram.png",
-          path: "./src/controllers/Proyects/image/Instagram.png",
-          cid: "Instagram",
+          filename: 'Instagram.png',
+          path: './src/controllers/Projects/image/Instagram.png',
+          cid: 'Instagram',
         },
         {
-          filename: "Linkedin.png",
-          path: "./src/controllers/Proyects/image/Linkedin.png",
-          cid: "Linkedin",
+          filename: 'Linkedin.png',
+          path: './src/controllers/Projects/image/Linkedin.png',
+          cid: 'Linkedin',
         },
       ],
     };
 
     await transporter.sendMail(adminEmailSendToParticipant, (error, info) => {
       if (error) {
-        console.log("Error al enviar el correo electrónico:", error);
+        console.log('Error al enviar el correo electrónico:', error);
       } else {
-        console.log("Correo electrónico enviado:", info.response);
+        console.log('Correo electrónico enviado:', info.response);
       }
     });
 
     res
       .status(200)
-      .json({ message: "El usuario ha sido borrado del proyecto", deleteUser });
+      .json({ message: 'El usuario ha sido borrado del proyecto', deleteUser });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = deleteUserProyect;
+module.exports = deleteUserProject;
