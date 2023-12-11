@@ -12,7 +12,7 @@ const userLogin = async (req, res) => {
   }
 
   try {
-    const admin = await Admin.findOne({ email, types: typesUser });
+    const admin = await Admin.findOne({ email });
 
     if (admin) {
       const passIsMatch = await bcrypt.compare(password, admin.password);
