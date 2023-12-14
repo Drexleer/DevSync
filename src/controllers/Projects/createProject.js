@@ -1,8 +1,8 @@
-require('dotenv').config();
-const Project = require('../../models/Projects');
-const User = require('../../models/User');
-const uploadImage = require('../../utils/Cloudinary');
-const transporter = require('../../utils/nodemailer');
+require("dotenv").config();
+const Project = require("../../models/Projects");
+const User = require("../../models/User");
+const uploadImage = require("../../utils/Cloudinary");
+const transporter = require("../../utils/nodemailer");
 
 const createdProject = async (req, res) => {
   const {
@@ -23,7 +23,7 @@ const createdProject = async (req, res) => {
     const existingProject = await Project.findOne({ createdBy });
     if (existingProject) {
       return res.status(400).json({
-        message: 'Ya tienes un Proyecto creado. No puedes crear más de uno.',
+        message: "Ya tienes un Proyecto creado. No puedes crear más de uno.",
       });
     }
 
@@ -32,7 +32,7 @@ const createdProject = async (req, res) => {
     if (projectFound) {
       return res
         .status(400)
-        .json({ message: 'El nombre del proyecto ya esta siendo utilizado' });
+        .json({ message: "El nombre del proyecto ya esta siendo utilizado" });
     }
 
     const newProject = await Project.create({
@@ -150,37 +150,37 @@ const createdProject = async (req, res) => {
       </html>`,
       attachments: [
         {
-          filename: 'LogoHenry.png',
-          path: './src/controllers/Projects/image/LogoHenry.png',
-          cid: 'LogoHenry',
+          filename: "LogoHenry.png",
+          path: "./src/controllers/Projects/image/LogoHenry.png",
+          cid: "LogoHenry",
         },
         {
-          filename: 'Facebook.png',
-          path: './src/controllers/Projects/image/Facebook.png',
-          cid: 'Facebook',
+          filename: "Facebook.png",
+          path: "./src/controllers/Projects/image/Facebook.png",
+          cid: "Facebook",
         },
         {
-          filename: 'Instagram.png',
-          path: './src/controllers/Projects/image/Instagram.png',
-          cid: 'Instagram',
+          filename: "Instagram.png",
+          path: "./src/controllers/Projects/image/Instagram.png",
+          cid: "Instagram",
         },
         {
-          filename: 'Linkedin.png',
-          path: './src/controllers/Projects/image/Linkedin.png',
-          cid: 'Linkedin',
+          filename: "Linkedin.png",
+          path: "./src/controllers/Projects/image/Linkedin.png",
+          cid: "Linkedin",
         },
       ],
     };
 
     await transporter.sendMail(adminEmailSend, (error, info) => {
       if (error) {
-        console.log('Error al enviar el correo electrónico:', error);
+        console.log("Error al enviar el correo electrónico:", error);
       } else {
-        console.log('Correo electrónico enviado:', info.response);
+        console.log("Correo electrónico enviado:", info.response);
       }
     });
 
-    res.status(201).json({ message: 'Proyecto creado con exito', newProject });
+    res.status(201).json({ message: "Proyecto creado con exito", newProject });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

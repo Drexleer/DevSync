@@ -25,17 +25,19 @@ Content-Type: application/json
 }
 
 ### Crear un Proyecto
-POST http://localhost:3001/proyect/create
+POST http://localhost:3001/project/create
 Content-Type: application/json
 
 {
   "name": "Ecomerce Indumentaria",
   "description": "Tenermos que hacer un Ecomerce de ropa donde tenga un stock",
-  "technologies": ["JavaScript", "HTML", "CSS", "NodeJS", "React"],
+  "technologies": {
+    "JavaScript": true, "HTML": true, "CSS": true, "NodeJS": true
+  },
   "linkProyectBack": "",
   "linkProyectFront": "",
   "image": "",
-  "createdBy": "65699972af200167f47502aa" 
+  "createdBy": "657b881d45a1691d99af86f7" 
 }
 
 ### Obtener todos los Proyectos
@@ -63,7 +65,7 @@ Content-Type: application/json
 }
 
 ### Borrar usuario de un Proyecto
-DELETE http://localhost:3001/proyect/deleteProyect/6573b309f70a83ebfab68cc6
+DELETE http://localhost:3001/project/deleteProject/657b9062817d4119041e7247
 
 ### Invitar usuario de un Proyecto
 POST http://localhost:3001/project/invite
