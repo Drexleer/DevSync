@@ -9,7 +9,7 @@ router.use("/user", userRoute);
 
 router.use("/contact", contactRoute);
 
-router.use("/Project", ProjectRoute);
+router.use("/project", ProjectRoute);
 
 router.use("/filters", filtersRoute);
 
