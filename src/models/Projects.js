@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ProjectSchema = new mongoose.Schema({
   name: {
@@ -30,9 +30,13 @@ const ProjectSchema = new mongoose.Schema({
   linkProjectManagement: {
     type: String,
   },
+  active: {
+    type: Boolean,
+    default: true,
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
     validate: {
       validator: async function (createdBy) {
@@ -41,21 +45,21 @@ const ProjectSchema = new mongoose.Schema({
         });
         return count === 0;
       },
-      message: 'Ya existe un proyecto creado por este usuario.',
+      message: "Ya existe un proyecto creado por este usuario.",
     },
   },
   participants: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       validate: {
         validator: function (participants) {
           return participants.length <= 8; // Máximo 8 participantes
         },
-        message: 'Máximo 8 participantes permitidos.',
+        message: "Máximo 8 participantes permitidos.",
       },
     },
   ],
 });
 
-module.exports = mongoose.model('Project', ProjectSchema);
+module.exports = mongoose.model("Project", ProjectSchema);

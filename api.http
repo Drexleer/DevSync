@@ -75,3 +75,12 @@ Content-Type: application/json
   "projectId": "657579d9841501018808ccd6",
   "inviteUsers": ["657535de8f80c591de8c4c7a", "6575707379ea90729e75f6c1", "657b881d45a1691d99af86f7"]
 }
+
+### Actualizar un Proyecto
+PATCH http://localhost:3001/project/update
+Content-Type: application/json
+
+{
+  "projectId": "657579d9841501018808ccd6",
+  "active": false
+}
