@@ -44,7 +44,7 @@ Content-Type: application/json
 GET http://localhost:3001/project
 
 ### Obtener un proyecto por Id
-GET http://localhost:3001/proyect/6573addf59580384f620cf02
+GET http://localhost:3001/project/65757975841501018808ccc5
 
 ### Registrarse a un Proyecto
 POST http://localhost:3001/proyect/register
