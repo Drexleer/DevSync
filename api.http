@@ -16,12 +16,12 @@ POST http://localhost:3001/user/register
 Content-Type: application/json
 
 {
-  "name": "Martin",
-  "lastName": "Lamacchia",
-  "userName": "Zurdo666",
+  "name": "Andrés",
+  "lastName": "Ojeda",
+  "userName": "Andy-O",
   "technologies": ["JavaScript", "HTML", "CSS", "NodeJS", "React"],
-  "email": "martinjiro22@gmail.com",
-  "password": "Pass123",
+  "email": "robotica4k@gmail.com",
+  "password": "12345"
 }
 
 ### Crear un Proyecto
@@ -29,15 +29,21 @@ POST http://localhost:3001/project/create
 Content-Type: application/json
 
 {
-  "name": "Ecomerce Indumentaria",
-  "description": "Tenermos que hacer un Ecomerce de ropa donde tenga un stock",
+
+  "name": "Plataforma de estudio Soy Fredy",
+  "description": "Plataforma de estudio donde la gente vea videos de temas y luego tengan CodeReviewa con profesora y se reciban de Full Stack",
   "technologies": {
-    "JavaScript": true, "HTML": true, "CSS": true, "NodeJS": true
+    "JavaScript": true,
+    "HTML": true,
+    "CSS": true,
+    "NodeJS": true,
+    "React": true
   },
-  "linkProyectBack": "",
-  "linkProyectFront": "",
+  "linkProjectBack": "",
+  "linkProjectFront": "",
   "image": "",
-  "createdBy": "657b881d45a1691d99af86f7" 
+  "createdBy": "657887bd94ecefc31272c5d7" 
+
 }
 
 ### Obtener todos los Proyectos

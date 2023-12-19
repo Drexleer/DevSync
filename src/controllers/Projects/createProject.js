@@ -14,10 +14,17 @@ const createdProject = async (req, res) => {
     createdBy,
   } = req.body;
 
+  console.log("REQ es:::::", req.body);
+
   try {
     const userCreator = await User.findById(createdBy);
 
-    const result = await uploadImage(req.files.image.tempFilePath);
+    const result = null;
+    
+    if (req.files && req.files.image) {
+      result = await uploadImage(req.files.image.tempFilePath);
+    }
+
 
     // Valida que cada usuario pueda crear un Proyecto solamente
     const existingProject = await Project.findOne({ createdBy });
@@ -41,9 +48,10 @@ const createdProject = async (req, res) => {
       technologies,
       linkProjectBack,
       linkProjectFront,
-      image: result.secure_url,
+      image: result? result.secure_url : null,
       createdBy,
     });
+
 
     const adminEmailSend = {
       from: process.env.EMAILCLIENT,
@@ -179,6 +187,7 @@ const createdProject = async (req, res) => {
         console.log("Correo electrónico enviado:", info.response);
       }
     });
+
 
     res.status(201).json({ message: "Proyecto creado con exito", newProject });
   } catch (error) {

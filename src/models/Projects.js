@@ -21,6 +21,10 @@ const ProjectSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  state: {
+    type: String,
+    default: "toDo",
+  },
   linkProjectFront: {
     type: String,
   },
