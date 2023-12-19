@@ -1,53 +1,57 @@
 const Project = require("../../models/Projects");
+const transporter = require("../../utils/nodemailer");
 const User = require("../../models/User");
 
-const registerProject = async (req, res) => {
-  const { projectId, participantsId } = req.body;
+const inviteCollaborator = async (req, res) => {
+  const { projectId, inviteUsers } = req.body;
 
   try {
-    const createByFound = await Project.findById(projectId)
-      .populate("createdBy")
-      .populate("participants")
-      .exec();
+    const results = [];
 
-    if (!createByFound) {
-      return res.status(404).json({
-        message: "No se encontro el proyecto",
-      });
-    }
+    // Iterar sobre los usuarios invitados
+    for (const user of inviteUsers) {
+      const createByFound = await Project.findById(projectId)
+        .populate("createdBy")
+        .populate("participants")
+        .exec();
 
-    // Pasa de ObjectId a String para validar si es el creador del Proyecto
-    const createByObjectId = createByFound.createdBy._id.toString();
+      if (!createByFound) {
+        results.push({ message: "No se encontró el proyecto" });
+        continue;
+      }
 
-    if (createByObjectId === participantsId) {
-      return res
-        .status(200)
-        .json({ message: "El usuario es el creador del Proyecto" });
-    }
+      const createByObjectId = createByFound.createdBy._id.toString();
 
-    const participantsObjectId = createByFound.participants.find(
-      (participant) => participant._id.toString() === participantsId
-    );
+      if (createByObjectId === user) {
+        results.push({ message: "El usuario es el creador del Proyecto" });
+        continue;
+      }
 
-    if (participantsObjectId) {
-      return res.status(200).json({
-        message: "El usuario ya esta registrado como participante del proyecto",
-      });
-    }
+      const participantsObjectId = createByFound.participants.find(
+        (participant) => participant._id.toString() === user
+      );
 
-    const newRegister = await Project.findByIdAndUpdate(
-      projectId,
-      { $push: { participants: participantsId } },
-      { new: true }
-    );
+      if (participantsObjectId) {
+        results.push({
+          message:
+            "El usuario ya está registrado como participante del proyecto",
+        });
+        continue;
+      }
 
-    const participantRegister = await User.findById(participantsId);
+      const newRegister = await Project.findByIdAndUpdate(
+        projectId,
+        { $push: { participants: user } },
+        { new: true }
+      );
 
-    const adminEmailSendToCreateBy = {
-      from: process.env.EMAILCLIENT,
-      to: createByFound.createdBy.email,
-      subject: `${participantRegister.userName} ahora es parte del proyecto`,
-      html: `<!DOCTYPE html>
+      const participantRegister = await User.findById(user);
+
+      const adminEmailSendToCreateBy = {
+        from: process.env.EMAILCLIENT,
+        to: createByFound.createdBy.email,
+        subject: `Has invitado como colaborador a ${participantRegister.userName}`,
+        html: `<!DOCTYPE html>
       <html lang="en">
       <head>
         <meta charset="UTF-8" />
@@ -146,43 +150,43 @@ const registerProject = async (req, res) => {
         </container>
       </body>
       </html>`,
-      attachments: [
-        {
-          filename: "LogoHenry.png",
-          path: "./src/controllers/Projects/image/LogoHenry.png",
-          cid: "LogoHenry",
-        },
-        {
-          filename: "Facebook.png",
-          path: "./src/controllers/Projects/image/Facebook.png",
-          cid: "Facebook",
-        },
-        {
-          filename: "Instagram.png",
-          path: "./src/controllers/Projects/image/Instagram.png",
-          cid: "Instagram",
-        },
-        {
-          filename: "Linkedin.png",
-          path: "./src/controllers/Projects/image/Linkedin.png",
-          cid: "Linkedin",
-        },
-      ],
-    };
+        attachments: [
+          {
+            filename: "LogoHenry.png",
+            path: "./src/controllers/Projects/image/LogoHenry.png",
+            cid: "LogoHenry",
+          },
+          {
+            filename: "Facebook.png",
+            path: "./src/controllers/Projects/image/Facebook.png",
+            cid: "Facebook",
+          },
+          {
+            filename: "Instagram.png",
+            path: "./src/controllers/Projects/image/Instagram.png",
+            cid: "Instagram",
+          },
+          {
+            filename: "Linkedin.png",
+            path: "./src/controllers/Projects/image/Linkedin.png",
+            cid: "Linkedin",
+          },
+        ],
+      };
 
-    await transporter.sendMail(adminEmailSendToCreateBy, (error, info) => {
-      if (error) {
-        console.log("Error al enviar el correo electrónico:", error);
-      } else {
-        console.log("Correo electrónico enviado:", info.response);
-      }
-    });
+      await transporter.sendMail(adminEmailSendToCreateBy, (error, info) => {
+        if (error) {
+          console.log("Error al enviar el correo electrónico:", error);
+        } else {
+          console.log("Correo electrónico enviado:", info.response);
+        }
+      });
 
-    const adminEmailSendToParticipant = {
-      from: process.env.EMAILCLIENT,
-      to: participantRegister.email,
-      subject: `${participantRegister.name} ${participantRegister.lastName} ya sos parte del proyecto ${createByFound.name}`,
-      html: `<!DOCTYPE html>
+      const adminEmailSendToParticipant = {
+        from: process.env.EMAILCLIENT,
+        to: participantRegister.email,
+        subject: `${participantRegister.name} ${participantRegister.lastName} ha sido invitado al Proyecto ${createByFound.name}`,
+        html: `<!DOCTYPE html>
       <html lang="en">
       <head>
         <meta charset="UTF-8" />
@@ -265,10 +269,7 @@ const registerProject = async (req, res) => {
           <main>
             <p>Estimado/a ${participantRegister.userName},</p>
             <p>
-              Le informamos que ha registrado exitosamente en el proyecto ${createByFound.name}
-            </p>
-            <p>
-              Pongase en contacto con ${createByFound.createdBy.userName} que es el creador del proyecto.
+              Le informamos que ha sido invitado al Proyecto ${createByFound.name} por el Usuario ${createByFound.createdBy.userName}
             </p>
             <p>
               Cualquier cosa no dude en contactarnos
@@ -284,44 +285,47 @@ const registerProject = async (req, res) => {
         </container>
       </body>
       </html>`,
-      attachments: [
-        {
-          filename: "LogoHenry.png",
-          path: "./src/controllers/Projects/image/LogoHenry.png",
-          cid: "LogoHenry",
-        },
-        {
-          filename: "Facebook.png",
-          path: "./src/controllers/Projects/image/Facebook.png",
-          cid: "Facebook",
-        },
-        {
-          filename: "Instagram.png",
-          path: "./src/controllers/Projects/image/Instagram.png",
-          cid: "Instagram",
-        },
-        {
-          filename: "Linkedin.png",
-          path: "./src/controllers/Projects/image/Linkedin.png",
-          cid: "Linkedin",
-        },
-      ],
-    };
+        attachments: [
+          {
+            filename: "LogoHenry.png",
+            path: "./src/controllers/Projects/image/LogoHenry.png",
+            cid: "LogoHenry",
+          },
+          {
+            filename: "Facebook.png",
+            path: "./src/controllers/Projects/image/Facebook.png",
+            cid: "Facebook",
+          },
+          {
+            filename: "Instagram.png",
+            path: "./src/controllers/Projects/image/Instagram.png",
+            cid: "Instagram",
+          },
+          {
+            filename: "Linkedin.png",
+            path: "./src/controllers/Projects/image/Linkedin.png",
+            cid: "Linkedin",
+          },
+        ],
+      };
 
-    await transporter.sendMail(adminEmailSendToParticipant, (error, info) => {
-      if (error) {
-        console.log("Error al enviar el correo electrónico:", error);
-      } else {
-        console.log("Correo electrónico enviado:", info.response);
-      }
-    });
+      await transporter.sendMail(adminEmailSendToParticipant, (error, info) => {
+        if (error) {
+          console.log("Error al enviar el correo electrónico:", error);
+        } else {
+          console.log("Correo electrónico enviado:", info.response);
+        }
+      });
 
-    res
-      .status(200)
-      .json({ message: "El usuario fue registrado al proyecto", newRegister });
+      results.push({
+        message: `Invitación enviada a ${participantRegister.userName}`,
+      });
+    }
+
+    res.status(200).json({ results });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = registerProject;
+module.exports = inviteCollaborator;

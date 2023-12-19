@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "name": "Martin Lamacchia",
   "email": "martinjiro22@gmail.com",
-  "message": "Hola Administrador tengo un problema con la creacion del Projecto"
+  "message": "Hola Administrador tengo un problema con la creacion del proyecto"
 }
 
 ### Obtener todos los Usuarios
@@ -29,6 +29,7 @@ POST http://localhost:3001/project/create
 Content-Type: application/json
 
 {
+
   "name": "Plataforma de estudio Soy Fredy",
   "description": "Plataforma de estudio donde la gente vea videos de temas y luego tengan CodeReviewa con profesora y se reciban de Full Stack",
   "technologies": {
@@ -42,31 +43,50 @@ Content-Type: application/json
   "linkProjectFront": "",
   "image": "",
   "createdBy": "657887bd94ecefc31272c5d7" 
+
 }
 
-### Obtener todos los Projectos
+### Obtener todos los Proyectos
 GET http://localhost:3001/project
 
-### Obtener un Projecto por Id
-GET http://localhost:3001/project/657579d9841501018808ccd6
+### Obtener un proyecto por Id
+GET http://localhost:3001/project/65757975841501018808ccc5
 
-### Registrarse a un Projecto
-POST http://localhost:3001/Project/register
+### Registrarse a un Proyecto
+POST http://localhost:3001/proyect/register
 Content-Type: application/json
 
 {
-  "ProjectId": "65737acdbfed0f4cb263cc79",
+  "proyectId": "65737acdbfed0f4cb263cc79",
   "participantsId": "656a5956109780b90cd3cabc"
 }
 
-### Borrar usuario de un Projecto
-POST http://localhost:3001/Project/deleteUser
+### Borrar usuario de un Proyecto
+POST http://localhost:3001/proyect/deleteUser
 Content-Type: application/json
 
 {
-  "ProjectId": "65737acdbfed0f4cb263cc79",
+  "proyectId": "65737acdbfed0f4cb263cc79",
   "participantsId": "656a54d2df516ba1622d5c41"
 }
 
-### Borrar usuario de un Projecto
-DELETE http://localhost:3001/Project/deleteProject/6573addf59580384f620cf02
+### Borrar usuario de un Proyecto
+DELETE http://localhost:3001/project/deleteProject/657b9062817d4119041e7247
+
+### Invitar usuario de un Proyecto
+POST http://localhost:3001/project/invite
+Content-Type: application/json
+
+{
+  "projectId": "657579d9841501018808ccd6",
+  "inviteUsers": ["657535de8f80c591de8c4c7a", "6575707379ea90729e75f6c1", "657b881d45a1691d99af86f7"]
+}
+
+### Actualizar un Proyecto
+PATCH http://localhost:3001/project/update
+Content-Type: application/json
+
+{
+  "projectId": "657579d9841501018808ccd6",
+  "active": false
+}

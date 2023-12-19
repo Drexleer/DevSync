@@ -18,22 +18,29 @@ const userLogin = async (req, res) => {
       const passIsMatch = await bcrypt.compare(password, admin.password);
 
       if (!passIsMatch) {
-        return res.status(400).json({ message: "Contraseña incorrecta" });
+        return res
+          .status(400)
+          .json({ message: "Contraseña incorrecta", access: false });
       }
 
-      return res.status(200).json({ message: "Bienvenido" });
+      return res.status(200).json({ message: "Bienvenido", access: true });
     }
 
     const user = await User.findOne({ email: email, types: typesUser });
 
-    if (!user) return res.status(400).json({ message: "El usuario no existe" });
+    if (!user)
+      return res
+        .status(400)
+        .json({ message: "El usuario no existe", access: false });
 
     const passIsMatch = await bcrypt.compare(password, user.password);
 
     if (!passIsMatch)
-      return res.status(400).json({ message: "Contraseña incorrecta" });
+      return res
+        .status(400)
+        .json({ message: "Contraseña incorrecta", access: false });
 
-    res.status(200).json({ message: "Bienvenido" });
+    res.status(200).json({ message: "Bienvenido", access: true });
   } catch (error) {
     res.status(500).json({ message: error.message });
     console.log(error);
